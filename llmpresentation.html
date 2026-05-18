@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>The Intelligence Blueprint - Nuray Lara Açar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Reveal.js Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css" id="theme">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --cyan: #00e5ff;
+            --purple: #b44eff;
+            --gold: #ffd447;
+            --red: #ff4e6a;
+            --bg-blur: rgba(3, 8, 16, 0.9);
+        }
+
+        body { font-family: 'Rajdhani', sans-serif; background-color: #030810; margin: 0; overflow: hidden; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Orbitron', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* Neon Effects */
+        .neon-cyan { color: var(--cyan); text-shadow: 0 0 15px rgba(0, 229, 255, 0.7); }
+        .neon-purple { color: var(--purple); text-shadow: 0 0 15px rgba(180, 78, 255, 0.7); }
+        .neon-gold { color: var(--gold); text-shadow: 0 0 15px rgba(255, 212, 71, 0.7); }
+        .gradient-text { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Cyber-Blueprint Glass Panels */
+        .glass-box {
+            background: rgba(7, 15, 28, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-left: 4px solid var(--cyan);
+            border-radius: 4px;
+            padding: 25px;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .glass-box::before {
+            content: "[ ACADEMIC_REF_INTACT ]"; position: absolute; top: 5px; right: 10px; font-family: 'Share Tech Mono'; font-size: 0.6rem; color: rgba(0, 229, 255, 0.4);
+        }
+
+        .reveal p, .reveal li { font-size: 0.9em; line-height: 1.6; color: #e8f4ff; }
+        .reveal strong { color: #fff; font-weight: 700; border-bottom: 1px solid var(--purple); }
+        
+        /* Background Particles */
+        #particles-js { position: absolute; width: 100%; height: 100%; z-index: -1; top: 0; left: 0; }
+        .reveal .slides { z-index: 10; }
+        
+        /* Layout Fixes */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .mono { font-family: 'Share Tech Mono', monospace; font-size: 0.7em !important; }
+
+        /* ✨ AI ASSISTANT TERMINAL UI */
+        #ai-assistant-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: var(--bg-blur);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #ai-assistant-toggle:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        #ai-terminal {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 380px;
+            height: 500px;
+            background: var(--bg-blur);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            border-top: 4px solid var(--cyan);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+        }
+
+        #ai-terminal-header {
+            padding: 12px 15px;
+            background: rgba(0, 229, 255, 0.15);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        #ai-chat-output {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Rajdhani', sans-serif;
+            color: #fff;
+            font-size: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--cyan) transparent;
+        }
+
+        .ai-msg { align-self: flex-start; background: rgba(180, 78, 255, 0.15); padding: 12px; border-radius: 4px; border-left: 3px solid var(--purple); max-width: 90%; }
+        .user-msg { align-self: flex-end; background: rgba(0, 229, 255, 0.15); padding: 12px; border-radius: 4px; border-right: 3px solid var(--cyan); text-align: right; max-width: 90%; }
+
+        #ai-input-container {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid rgba(0, 229, 255, 0.2);
+            gap: 10px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        #ai-user-input {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            outline: none;
+        }
+        #ai-user-input:focus { border-color: var(--cyan); }
+
+        #ai-send-btn {
+            background: var(--cyan);
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #ai-send-btn:hover { background: #fff; box-shadow: 0 0 15px var(--cyan); }
+
+        .typing-indicator { font-style: italic; color: var(--cyan); font-size: 12px; opacity: 0.8; }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <!-- ✨ AI ASSISTANT OVERLAY -->
+    <button id="ai-assistant-toggle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+        ASK THE ARCHITECT
+    </button>
+
+    <div id="ai-terminal">
+        <div id="ai-terminal-header">
+            <span>// TERMINAL: LINK_ESTABLISHED</span>
+            <span style="cursor:pointer" onclick="toggleTerminal()">[TERMINATE_X]</span>
+        </div>
+        <div id="ai-chat-output">
+            <div class="ai-msg">Neural link active. I am the <strong>Architect</strong>. Ask me anything about the Large Language Model frameworks presented by Nuray Lara Açar.</div>
+        </div>
+        <div id="ai-input-container">
+            <input type="text" id="ai-user-input" placeholder="Initiate query..." autocomplete="off">
+            <button id="ai-send-btn">EXECUTE</button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1 -->
+            <section data-transition="zoom" data-slide-content="Introduction to AI Architecture by Nuray Lara Açar. Covers Turing, ML, DL, and Transformers.">
+                <p class="mono neon-cyan" style="margin-bottom: 0;">// SYSTEM_INITIALIZATION: COMPLETED</p>
+                <h1 class="gradient-text" style="font-size: 4rem; line-height: 1.1;">THE ARCHITECTURE<br>OF INTELLIGENCE</h1>
+                <h3 class="neon-purple" style="font-size: 1.2rem; margin-top: 20px;">Beyond the Black Box: Academic Dissection</h3>
+                <p style="margin-top: 60px; font-weight: bold; font-size: 1.5rem; letter-spacing: 5px;">NURAY LARA AÇAR</p>
+                <div style="display: inline-block; padding: 10px 30px; border: 1px solid var(--cyan); background: rgba(0,229,255,0.05); margin-top: 15px;">
+                    <p class="mono" style="margin: 0; color: #666;">Advisor: Dr. Öğr. Üyesi Zehra Bozdağ Karakeçi</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 2 -->
+            <section data-transition="slide" data-slide-content="The history of AI: 1950 Turing Test, 1990s Machine Learning (Supervised/Unsupervised/Reinforcement), 2010s Deep Learning/NLP/ANN. Current frontier of LLMs.">
+                <h2 class="neon-cyan">The Evolution Spectrum</h2>
+                <div class="glass-box fragment" style="margin-bottom: 15px;">
+                    <p><strong>1950s // The Foundation:</strong> Alan Turing proposes the <span class="neon-cyan">Imitation Game</span>. Can machines simulate human reasoning?</p>
+                </div>
+                <div class="glass-box fragment" style="border-left-color: var(--purple); margin-bottom: 15px;">
+                    <p><strong>1990s // The Engine:</strong> Machine Learning. Shifting from hard-coded rules to statistical pattern discovery.</p>
+                </div>
+                <div class="glass-box fragment" style="border-left-color: var(--gold); margin-bottom: 15px;">
+                    <p><strong>2010s // The Network:</strong> Deep Learning & NLP. Artificial neural networks (ANN) mimicking human cortical structures.</p>
+                </div>
+                <div class="glass-box fragment" style="border-left-color: #fff;">
+                    <p><strong>Present // The Frontier:</strong> Large Language Models. Massive parameter counts and Attention Mechanisms for prediction.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 3 -->
+            <section data-transition="convex" data-slide-content="Why older models failed. RNN sequential bottlenecks (one word at a time = high time cost). LSTM contextual decay (forgetting the start of long sequences).">
+                <h2 style="color: var(--red);">The Sequential Bottleneck</h2>
+                <p class="mono neon-gold">[ DIAGNOSTIC: ARCHITECTURAL FAILURE PRE-2017 ]</p>
+                <div class="grid-2">
+                    <div class="glass-box fragment" style="border-left-color: var(--red);">
+                        <h4 style="color: var(--red);">Sequential Trap</h4>
+                        <p>RNNs processed text <strong>one word at a time</strong>. This created a massive linear time cost.</p>
+                    </div>
+                    <div class="glass-box fragment" style="border-left-color: #ff9900;">
+                        <h4 style="color: #ff9900;">Contextual Decay</h4>
+                        <p>Information from the start was "forgotten" by the end. LSTM gates failed at very long-term dependencies.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4 -->
+            <section data-transition="zoom" data-slide-content="The 2017 Transformer Breakthrough. Paper 'Attention is All You Need'. Introduces Parallel Processing and Global Context for the whole sequence.">
+                <h2 class="neon-cyan">2017: The Transformer Era</h2>
+                <div class="glass-box" style="text-align: center;">
+                    <h3 style="color: #fff; font-size: 2rem;">"Attention Is All You Need"</h3>
+                    <p class="mono neon-cyan" style="margin-bottom: 20px;">// Google Research eliminates the sequential timeline</p>
+                    <div class="grid-2" style="text-align: left;">
+                        <div class="fragment">
+                            <strong>Massively Parallel:</strong> Simultaneous processing across GPU cores.
+                        </div>
+                        <div class="fragment">
+                            <strong>Global Context:</strong> Every token evaluates every other token at once.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5 -->
+            <section data-slide-content="Embeddings: Mapping language into multi-dimensional geometry. Understanding semantic relationships through spatial coordinate differences (e.g., 'Bark' near 'Dog' vs 'Bark' near 'Tree').">
+                <h2 class="neon-purple">Tokens to Vectors</h2>
+                <p class="mono" style="color: #4c566a;">[ MAPPING LANGUAGE TO CONTINUOUS VECTOR SPACE ]</p>
+                <div class="glass-box fragment">
+                    <p>LLMs shatter text into <strong>tokens</strong>. Each token is projected into high-dimensional geometry called <strong>Embeddings</strong>.</p>
+                </div>
+                <div class="glass-box fragment" style="margin-top: 20px; border-left-color: var(--purple);">
+                    <p>The model mathematically learns that <strong>"Bark"</strong> near <strong>"Tree"</strong> occupies a completely different coordinate space than <strong>"Bark"</strong> near <strong>"Dog"</strong>.</p>
+                    <p class="mono" style="margin-top: 10px; color: var(--purple);">"Meaning is structural geometry."</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 6 -->
+            <section data-transition="slide" data-slide-content="The Q-K-V mechanism: Query (what am I looking for), Key (what I hold), and Value (payload). Softmax normalization for attention weights.">
+                <h2 class="neon-cyan">Resolving Semantic Density</h2>
+                <p class="mono" style="font-size: 0.6em;">THE LOCK AND KEY METAPHOR (Q, K, V)</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <div class="glass-box fragment" style="border-top: 3px solid var(--cyan); border-left: none; text-align: center;">
+                        <h4 class="neon-cyan">Q (Query)</h4>
+                        <p style="font-size: 0.7em;">"What am I looking for?" The radar ping.</p>
+                    </div>
+                    <div class="glass-box fragment" style="border-top: 3px solid var(--purple); border-left: none; text-align: center;">
+                        <h4 class="neon-purple">K (Key)</h4>
+                        <p style="font-size: 0.7em;">"What information do I hold?" The index tag.</p>
+                    </div>
+                    <div class="glass-box fragment" style="border-top: 3px solid #fff; border-left: none; text-align: center;">
+                        <h4 style="color: #fff;">V (Value)</h4>
+                        <p style="font-size: 0.7em;">"The payload." The semantic data extracted.</p>
+                    </div>
+                </div>
+                <div class="glass-box fragment" style="margin-top: 20px; text-align: center; border-left: none; background: rgba(0,0,0,0.5);">
+                    <p class="mono" style="color: var(--gold);">Attention(Q, K, V) = softmax(QKᵀ / √dₖ) · V</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 7 -->
+            <section data-background-color="#000" data-slide-content="Interactive 3D view of the Transformer architecture. Visualizing layers and parameters.">
+                <h2 class="neon-cyan" style="margin-bottom: 10px;">Inside the Black Box</h2>
+                <p class="mono" style="font-size: 0.7em; color: #4c566a;">// INITIATING LIVE 3D TRANSFORMER VISUALIZATION</p>
+                <iframe data-src="https://bbycroft.net/llm" width="100%" height="550px" style="border: 2px solid var(--cyan); border-radius: 8px;"></iframe>
+            </section>
+
+            <!-- SLIDE 8 -->
+            <section data-slide-content="The Manufacturing Pipeline: Pre-training (Backpropagation/Gradient Descent), Fine-tuning (specific tasks), and RLHF (Reinforcement Learning from Human Feedback) for alignment.">
+                <h2 class="neon-purple">The Pipeline of Intelligence</h2>
+                <div class="glass-box fragment" style="margin-bottom: 15px;">
+                    <p><strong>1. Pre-Training:</strong> Using <strong>Gradient Descent</strong> and <strong>Backpropagation</strong> to minimize the Loss Function on internet-scale data.</p>
+                </div>
+                <div class="glass-box fragment" style="border-left-color: var(--purple); margin-bottom: 15px;">
+                    <p><strong>2. Fine-Tuning:</strong> Adapting the model for tasks like coding or medical analysis using curated data.</p>
+                </div>
+                <div class="glass-box fragment" style="border-left-color: var(--cyan);">
+                    <p><strong>3. RLHF:</strong> Reinforcement Learning from Human Feedback to align the AI with human helpfulness and safety.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 9 -->
+            <section data-slide-content="Limitations: Catastrophic Forgetting, The Intern Problem (failing simple logic), Multimodal blindness, and the massive Economic Wall of energy/compute costs.">
+                <h2 style="color: var(--red);">The Unsolved Symmetries</h2>
+                <div class="grid-2">
+                    <div class="glass-box fragment" style="border-left-color: var(--red);">
+                        <h4 style="color: var(--red);">Catastrophic Forgetting</h4>
+                        <p style="font-size: 0.8em;">Learning new tasks often overwrites critical old data weights.</p>
+                    </div>
+                    <div class="glass-box fragment" style="border-left-color: #ff9900;">
+                        <h4 style="color: #ff9900;">The Intern Problem</h4>
+                        <p style="font-size: 0.8em;">Models pass PhD exams but can fail nursery-level logic or multi-step reasoning.</p>
+                    </div>
+                </div>
+                <div class="glass-box fragment" style="margin-top: 20px; border-left-color: #555;">
+                    <p style="font-size: 0.8em;"><strong>Economic Wall:</strong> Training costs exceeding $100M+ per run for frontier models.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 10 -->
+            <section data-slide-content="IT Roles: Database Administrator, Data Engineer (Plumber), Data Scientist (Statistician), and ML Engineer (Architect).">
+                <h2 class="neon-cyan">The Builders Ecosystem</h2>
+                <table style="width: 100%; font-size: 0.65em; border-collapse: collapse; background: rgba(7,15,28,0.85); border: 1px solid #333;">
+                    <tr style="background: rgba(0,229,255,0.1); border-bottom: 2px solid var(--cyan);">
+                        <th style="padding: 15px;">Role</th>
+                        <th style="padding: 15px;">Focus</th>
+                        <th style="padding: 15px;">Analogy</th>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Database Admin</td>
+                        <td>Infrastructure</td>
+                        <td style="color: var(--cyan);">The Bedrock</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Data Engineer</td>
+                        <td>ETL Pipelines</td>
+                        <td style="color: var(--cyan);">The Plumber</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Data Scientist</td>
+                        <td>Algorithms</td>
+                        <td style="color: var(--purple);">The Statistician</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>ML Engineer</td>
+                        <td>Deployment</td>
+                        <td style="color: #fff;">The Architect</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- SLIDE 11 -->
+            <section data-transition="zoom" data-slide-content="Call to Action. Use Kaggle for data and Hugging Face for models. Don't just use AI, build it.">
+                <h2 style="font-size: 2rem;">STOP USING AI.</h2>
+                <h1 class="gradient-text" style="font-size: 4rem;">START BUILDING IT.</h1>
+                <div class="grid-2" style="margin-top: 40px; text-align: center;">
+                    <div class="glass-box fragment" style="border-top: 3px solid var(--cyan); border-left: none;">
+                        <h4 class="neon-cyan">Kaggle</h4>
+                        <p style="font-size: 0.7em;">Data science playground.</p>
+                    </div>
+                    <div class="glass-box fragment" style="border-top: 3px solid var(--purple); border-left: none;">
+                        <h4 class="neon-purple">Hugging Face</h4>
+                        <p style="font-size: 0.7em;">The GitHub of AI.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12 -->
+            <section data-transition="fade">
+                <h1 class="neon-cyan" style="font-size: 5rem;">THANK YOU</h1>
+                <p>Awaiting Human Queries...</p>
+                <div style="margin-top: 100px; border-top: 1px solid #222; padding-top: 20px; font-family: 'Share Tech Mono'; font-size: 0.7rem; color: #4c566a;">
+                    [SYSTEM_HALT] // NURAY LARA AÇAR // 2026
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Reveal.js Initialization (Fixed history/hash error)
+        Reveal.initialize({ 
+            controls: true, 
+            progress: true, 
+            center: true, 
+            hash: false, 
+            history: false,
+            transition: 'convex', 
+            width: 1280, 
+            height: 720, 
+            margin: 0.05 
+        });
+
+        // Background Neural Particles
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 90, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#00e5ff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": true },
+                "size": { "value": 2, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#b44eff", "opacity": 0.25, "width": 1 },
+                "move": { "enable": true, "speed": 1.2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true } },
+            "retina_detect": true
+        });
+
+        // ✨ GEMINI API INTEGRATION ✨
+        const apiKey = "";
+
+        async function callGemini(prompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "No data received.";
+                } catch (err) {
+                    if (i === 4) return "Connection timeout. Please retry.";
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        const terminal = document.getElementById('ai-terminal');
+        const output = document.getElementById('ai-chat-output');
+        const input = document.getElementById('ai-user-input');
+        const sendBtn = document.getElementById('ai-send-btn');
+        const toggleBtn = document.getElementById('ai-assistant-toggle');
+
+        function toggleTerminal() {
+            terminal.style.display = (terminal.style.display === 'flex') ? 'none' : 'flex';
+            if(terminal.style.display === 'flex') input.focus();
+        }
+
+        toggleBtn.onclick = toggleTerminal;
+
+        async function handleAISend() {
+            const query = input.value.trim();
+            if (!query) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-msg';
+            userDiv.textContent = query;
+            output.appendChild(userDiv);
+            input.value = '';
+            output.scrollTop = output.scrollHeight;
+
+            const loading = document.createElement('div');
+            loading.className = 'ai-msg typing-indicator';
+            loading.textContent = 'Deciphering neural weights...';
+            output.appendChild(loading);
+
+            const currentSlide = Reveal.getCurrentSlide();
+            const slideContext = currentSlide.getAttribute('data-slide-content') || "Presentation on LLM Architecture.";
+            
+            const systemPrompt = `Role: AI Architect Assistant. 
+            Audience: Dr. Zehra Bozdağ Karakeçi and students. 
+            Topic: Large Language Models and Deep Learning. 
+            Current context: ${slideContext}. 
+            Task: Provide precise, academic, and visionary English responses. 
+            If asked for a quiz, ask a technical question based on the slide. 
+            Tone: Futuristic, Professional.`;
+
+            const aiResponse = await callGemini(query, systemPrompt);
+            
+            output.removeChild(loading);
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'ai-msg';
+            aiDiv.innerHTML = aiResponse.replace(/\n/g, '<br>');
+            output.appendChild(aiDiv);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        sendBtn.onclick = handleAISend;
+        input.onkeypress = (e) => { if(e.key === 'Enter') handleAISend(); };
+
+    </script>
+</body>
+</html>
