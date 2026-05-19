@@ -425,33 +425,25 @@
         });
 
         // ✨ GEMINI API INTEGRATION ✨
-        const apiKey = "";
+     async function callAI(prompt, systemInstruction) {
+    try {
+        const response = await fetch("http://localhost:5000/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prompt,
+                context: systemInstruction
+            })
+        });
 
-        async function callGemini(prompt, systemInstruction) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
-
-            let delay = 1000;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error('API Error');
-                    const result = await response.json();
-                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "No data received.";
-                } catch (err) {
-                    if (i === 4) return "Connection timeout. Please retry.";
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
-                }
-            }
-        }
+        const data = await response.json();
+        return data.response || "No response received.";
+    } catch (err) {
+        return "Backend connection error.";
+    }
+}
 
         const terminal = document.getElementById('ai-terminal');
         const output = document.getElementById('ai-chat-output');
@@ -466,42 +458,47 @@
 
         toggleBtn.onclick = toggleTerminal;
 
-        async function handleAISend() {
-            const query = input.value.trim();
-            if (!query) return;
+    async function handleAISend() {
+    const query = input.value.trim();
+    if (!query) return;
 
-            const userDiv = document.createElement('div');
-            userDiv.className = 'user-msg';
-            userDiv.textContent = query;
-            output.appendChild(userDiv);
-            input.value = '';
-            output.scrollTop = output.scrollHeight;
+    const userDiv = document.createElement('div');
+    userDiv.className = 'user-msg';
+    userDiv.textContent = query;
+    output.appendChild(userDiv);
+    input.value = '';
+    output.scrollTop = output.scrollHeight;
 
-            const loading = document.createElement('div');
-            loading.className = 'ai-msg typing-indicator';
-            loading.textContent = 'Deciphering neural weights...';
-            output.appendChild(loading);
+    const loading = document.createElement('div');
+    loading.className = 'ai-msg typing-indicator';
+    loading.textContent = 'Thinking...';
+    output.appendChild(loading);
 
-            const currentSlide = Reveal.getCurrentSlide();
-            const slideContext = currentSlide.getAttribute('data-slide-content') || "Presentation on LLM Architecture.";
+    const currentSlide = Reveal.getCurrentSlide();
+    const slideContext =
+        currentSlide?.getAttribute('data-slide-content')
+        || "Presentation on LLM Architecture.";
+
+    const systemPrompt = `
+You are an AI presentation assistant.
+Audience: academic level.
+Context: ${slideContext}
+Give clear, structured answers.
+`;
+
+    const aiResponse = await callAI(query, systemPrompt);
+
+    output.removeChild(loading);
+
+    const aiDiv = document.createElement('div');
+    aiDiv.className = 'ai-msg';
+    aiDiv.innerHTML = aiResponse.replace(/\n/g, "<br>");
+
+    output.appendChild(aiDiv);
+    output.scrollTop = output.scrollHeight;
+}
+
             
-            const systemPrompt = `Role: AI Architect Assistant. 
-            Audience: Dr. Zehra Bozdağ Karakeçi and students. 
-            Topic: Large Language Models and Deep Learning. 
-            Current context: ${slideContext}. 
-            Task: Provide precise, academic, and visionary English responses. 
-            If asked for a quiz, ask a technical question based on the slide. 
-            Tone: Futuristic, Professional.`;
-
-            const aiResponse = await callGemini(query, systemPrompt);
-            
-            output.removeChild(loading);
-            const aiDiv = document.createElement('div');
-            aiDiv.className = 'ai-msg';
-            aiDiv.innerHTML = aiResponse.replace(/\n/g, '<br>');
-            output.appendChild(aiDiv);
-            output.scrollTop = output.scrollHeight;
-        }
 
         sendBtn.onclick = handleAISend;
         input.onkeypress = (e) => { if(e.key === 'Enter') handleAISend(); };
