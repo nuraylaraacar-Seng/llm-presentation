@@ -427,7 +427,7 @@
         // ✨ GEMINI API INTEGRATION ✨
      async function callAI(prompt, systemInstruction) {
     try {
-        const response = await fetch("http://localhost:5000/chat", {
+        const response = await fetch("https://llm-presentation.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
